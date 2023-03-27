@@ -3,28 +3,32 @@ import tkinter as tk
 from tkcalendar import*
 from tkinter import ttk
 from tkinter import messagebox
+#SE IMPORTA EL GUI TKINTER Y ALGUNAS LIBRERIAS NECESARIAS
 
+#----
+"""Mi Calendario de Eventos. Sólo puede hacer que se añadan los eventos, pero no pude hacer que funcionen los botones para crear; y crear el boton para eliminar evento"""
 
 ventana=tk.Tk()
 ventana.title("Mi Calendario")
-ventana.geometry("600x600")
+ventana.geometry("600x800")
 ventana.resizable(False,True)
 ventana.configure(background = "dark turquoise")
 ventana.title("Mi Calendario")
+#SE CREA UNA VENTANA, Y SE DEFINEN LAS PROPIEDADES
 
 #image=tk.PhotoImage(file="IMG.gif")
 #image=image.subsample(1,1)
 #label=tk.Label(image=image)
 #label.place(x=0, y=0, relwidth=1.0, relheight=1.0)
+#Esto es para agregar una imagen de fondo, que al final lo borré
 
 el=tk.Label(ventana, text="MI CALENDARIO", bg="black", fg="white")
 el.pack(padx=5, pady=5, ipadx=5, ipady=5, fill=tk.X)
 
 cal = Calendar(ventana, select="day", date_pattern="d/m/yy")
 cal.pack(pady=20, fill="both")
+#AQUI CREO EL CALENDARIO UTILIZANDO lA LIBRERIA TKCALENDAR
 
-#def grab_date():
-#    my_label.config(text=cal.get_date())
 
 def AgregarEvento():
     tk.Label(ventana, text=cal.get_date()+" - "+entrada.get(), bg="black", fg="white").pack(padx=5, pady=5, ipadx=5, ipady=5, fill=tk.X)
@@ -35,23 +39,61 @@ entrada.pack(fill=tk.X, padx=5, pady=5, ipadx=5, ipady=5)
 my_button= Button(ventana, text="Nuevo Evento", command=AgregarEvento)
 my_button.pack(pady=20)
 
-my_button2 = Button(ventana, text = "Borrar Evento", command = delete)
-my_button2.pack()
+#DEFINO UNA FUNCIÓN PARA AÑADIR EVENTOS, ESTA CAPTA LA FECHA QUE SE ELIJE Y MUESTRA EL EVENTO
 
+def enter_data():
+    accepted = accept_var.get()
+    
+    if accepted=="Accepted":
+        # Modificar Evento
+        Fecha = Fecha_entry.get()
+        Hora = Hora_entry.get()
+        
+        if Fecha and Hora:
+            Prioridad = prioridad_combobox.get()
+            Evento  = evento_combobox.get()
+                        
+        else: 
+            tk.messagebox.showwarning(title="Error", message="Escriba algo por favor.")
+#DEFINO OTRA FUNCIÓN PARA MODIFICAR EVENTOS, pero no logro que funcione
 
+frame = tk.Frame(ventana)
+frame.pack()
 
-#my_label=Label(ventana, text="")
-#my_label.pack(pady=20)
+# Saving User Info
+nuevo_evento_frame =tk.LabelFrame(frame, text="Modificar Evento")
+nuevo_evento_frame.grid(row= 0, column=0, padx=20, pady=10)
 
-#el=tk.Label(ventana, text="Nuevo Evento", bg="black", fg="white")
-#el.pack(padx=5, pady=5, ipadx=5, ipady=5, fill=tk.X)
+Fecha_label = tk.Label(nuevo_evento_frame, text="Evento")
+Fecha_label.grid(row=0, column=0)
+Horario_label = tk.Label(nuevo_evento_frame, text=cal.get_date()+" - "+entrada.get())
+Horario_label.grid(row=0, column=1)
 
+Fecha_entry = tk.Entry(nuevo_evento_frame)
+Hora_entry = tk.Entry(nuevo_evento_frame)
+Fecha_entry.grid(row=1, column=0)
+Hora_entry.grid(row=1, column=1)
 
-#el=tk.Label(ventana, text="Nuevo Evento", bg="black", fg="white")
-#el.pack(padx=5, pady=5, ipadx=5, ipady=5, fill=tk.X)
-#entrada=tk.Entry(ventana)
-#entrada.pack(fill=tk.X, padx=5, pady=5, ipadx=5, ipady=5)
+prioridad_label = tk.Label(nuevo_evento_frame, text="Tipo de evento")
+prioridad_combobox = ttk.Combobox(nuevo_evento_frame, values=["Importante","Normal"])
+prioridad_label.grid(row=0, column=2)
+prioridad_combobox.grid(row=1, column=2)
 
+evento_combobox = tk.Label()
 
+hora_label = tk.Label(nuevo_evento_frame, text="Hora")
+hora_spinbox = tk.Spinbox(nuevo_evento_frame, from_=1, to=24)
+hora_label.grid(row=2, column=0)
+hora_spinbox.grid(row=3, column=0)
+
+for widget in nuevo_evento_frame.winfo_children():
+    widget.grid_configure(padx=10, pady=5)
+
+accept_var = tk.StringVar(value="Accepted")
+
+#Botón para modificar el evento
+button = tk.Button(frame, text="Modificar Evento", command= enter_data)
+button.grid(row=3, column=0, sticky="news", padx=20, pady=10)
+ 
 
 ventana.mainloop()
